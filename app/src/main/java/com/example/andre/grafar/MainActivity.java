@@ -25,11 +25,16 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -121,39 +126,47 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onGraphBtn(View view) {
-        final String function = inputFunction.getText().toString();
-        requestQueue = Volley.newRequestQueue(this);
-        StringRequest graphRequest = new StringRequest(Request.Method.POST, urlPost,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.d("res", response);
-                        Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("error", error.toString());
+        StringRequest graphRequest = null;
+        try {
+
+            JSONObject jsonBody = new JSONObject();
+            final String function = inputFunction.getText().toString();
+            jsonBody.put("function",function);
+            final String requestBody = jsonBody.toString();
+            requestQueue = Volley.newRequestQueue(this);
+            graphRequest = new StringRequest(Request.Method.POST, urlPost,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            Log.d("res", response);
+                            Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("error", error.toString());
+                }
+            }
+            ) {
+                @Override
+                public String getBodyContentType() {
+                    return "application/json";
+                }
+
+                @Override
+                public byte[] getBody() throws AuthFailureError {
+                    try {
+                        return requestBody == null ? null : requestBody.getBytes("utf-8");
+                    }catch (UnsupportedEncodingException uee){
+                        VolleyLog.wtf("Unsupported Encoding while trying to get the bytes of %s using %s", requestBody, "utf-8");
+                        return null;
                     }
                 }
-        ) {
+            };
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
 
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                HashMap<String,String> headers = new HashMap<>();
-                headers.put("Content-Type","application/json");
-                Log.d("headers", headers.toString());
-                return headers;
-            }
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<String,String>();
-                params.put("function",function);
-                Log.d("params", params.toString());
-                return params;
-            }
-        };
         requestQueue.add(graphRequest);
     }
 }
