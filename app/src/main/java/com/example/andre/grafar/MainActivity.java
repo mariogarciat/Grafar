@@ -1,6 +1,7 @@
 package com.example.andre.grafar;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -47,7 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
     private RequestQueue requestQueue;
     private String urlPost = "https://grafar.herokuapp.com/api/data";
-    public EditText inputFunction;
+    private EditText inputRange;
+    private EditText inputFunction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         inputFunction = findViewById(R.id.editFunction);
+        inputRange = findViewById(R.id.editRango);
+
+        if(getIntent().getStringExtra("func") != null) {
+            inputFunction.setText(getIntent().getStringExtra("func"));
+        }
 
         PermissionListener permissionlistener = new PermissionListener() {
             @Override
@@ -75,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         TedPermission.with(this)
                 .setPermissionListener(permissionlistener)
                 .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
-                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA)
                 .check();
 
 
@@ -131,7 +138,9 @@ public class MainActivity extends AppCompatActivity {
 
             JSONObject jsonBody = new JSONObject();
             final String function = inputFunction.getText().toString();
+            final String range = inputRange.getText().toString();
             jsonBody.put("function",function);
+            //jsonBody.put("range",range);
             final String requestBody = jsonBody.toString();
             requestQueue = Volley.newRequestQueue(this);
             graphRequest = new StringRequest(Request.Method.POST, urlPost,
@@ -168,5 +177,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         requestQueue.add(graphRequest);
+    }
+
+    public void onQRDecode(View view) {
+        Intent intent = new Intent(this,DecoderActivity.class);
+        startActivity(intent);
     }
 }
