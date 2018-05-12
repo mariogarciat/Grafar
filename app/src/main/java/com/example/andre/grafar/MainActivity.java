@@ -48,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
     private RequestQueue requestQueue;
     private String urlPost = "https://grafar.herokuapp.com/api/data";
-    private EditText inputRange;
+    private EditText inputLimInf;
+    private EditText inputLimSup;
     private EditText inputFunction;
+    private String[] arrayInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +61,14 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         inputFunction = findViewById(R.id.editFunction);
-        inputRange = findViewById(R.id.editRango);
+        inputLimInf = findViewById(R.id.editLimInf);
+        inputLimSup = findViewById(R.id.editLimSup);
 
-        if(getIntent().getStringExtra("func") != null) {
-            inputFunction.setText(getIntent().getStringExtra("func"));
+        if(getIntent().getStringExtra("data") != null) {
+            arrayInput = getIntent().getStringExtra("data").split(",");
+            inputFunction.setText(arrayInput[0]);
+            inputLimInf.setText(arrayInput[1]);
+            inputLimSup.setText(arrayInput[2]);
         }
 
         PermissionListener permissionlistener = new PermissionListener() {
@@ -138,9 +144,11 @@ public class MainActivity extends AppCompatActivity {
 
             JSONObject jsonBody = new JSONObject();
             final String function = inputFunction.getText().toString();
-            final String range = inputRange.getText().toString();
+            final String limInf = inputLimInf.getText().toString();
+            final String limSup = inputLimSup.getText().toString();
             jsonBody.put("function",function);
-            //jsonBody.put("range",range);
+            jsonBody.put("a",limInf);
+            jsonBody.put("b",limSup);
             final String requestBody = jsonBody.toString();
             requestQueue = Volley.newRequestQueue(this);
             graphRequest = new StringRequest(Request.Method.POST, urlPost,

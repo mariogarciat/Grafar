@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Grafar</string>
     <string name="action_settings">Settings</string>
-    <string name="generar">Generar</string>
+    <string name="search">Search</string>
 </resources>

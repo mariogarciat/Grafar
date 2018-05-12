@@ -51,24 +51,43 @@
                 tools:layout_editor_absoluteX="16dp"
                 tools:layout_editor_absoluteY="89dp" />
 
-            <EditText
-                android:id="@+id/editFunction"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingrese función"
-                android:textAlignment="center"
-                android:layout_marginTop="20dp"/>
-
-            <EditText
-                android:id="@+id/editRango"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingrese rango"
-                android:textAlignment="center"/>
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/texttext"/>
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/editFunction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Ingrese función"
+                    android:textAlignment="center"
+                    android:layout_marginTop="20dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editLimInf"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Límite inferior"
+                        android:paddingRight="10dp"
+                        android:textAlignment="center"/>
+                    <EditText
+                        android:id="@+id/editLimSup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Límite superior"
+                        android:paddingLeft="10dp"
+                        android:textAlignment="center"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -78,7 +97,7 @@
             android:orientation="vertical"
             android:gravity="center"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/layTitle"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
@@ -111,7 +130,7 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="15dp"
-                android:text="@string/generar"
+                android:text="@string/search"
                 android:layout_marginTop="5dp"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
