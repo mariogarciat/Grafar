@@ -17,6 +17,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Range;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -58,7 +59,7 @@ public class CameraView extends AppCompatActivity implements CameraBridgeViewBas
         bitmap = BitmapFactory.decodeByteArray(byteImage,0,byteImage.length);
         Log.d("tagbm",bitmap.toString());
         matBipmap = new Mat();
-        Utils.bitmapToMat(bitmap,matBipmap);
+        Utils.bitmapToMat(bitmap,matBipmap,true);
         Log.d("cols",""+matBipmap.cols());
         Log.d("rows",""+matBipmap.rows());
     }
@@ -112,17 +113,28 @@ public class CameraView extends AppCompatActivity implements CameraBridgeViewBas
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
 
         mRgba = inputFrame.rgba();
-        Log.d("colsback",""+mRgba.cols());
-        Log.d("rowsback",""+mRgba.rows());
-        Mat newmRgba = overlap(mRgba,matBipmap);
-        Log.d("mRgba",mRgba.toString());
-        return newmRgba;
+        /*Log.d("mRgba1",mRgba.toString());
+        Mat newMat = new Mat(mRgba.rows()/2,mRgba.cols()/2,CvType.CV_8UC4);
+        Log.d("newMat",newMat.toString());
+        //Mat newMat = mRgba.submat(mRgba.rows()/3,mRgba.rows()*2/3,mRgba.cols()/3,mRgba.cols()*2/3);
+        //overlap(mRgba,matBipmap);
+        newMat.setTo(new Scalar(255));
+        //matBipmap.reshape(0,newMat.rows());
+        //matBipmap.copyTo(newMat);
+        newMat.copyTo(mRgba);
+        Log.d("mRgba2",mRgba.toString());*/
+
+        for (int i=0;i<mRgba.height()/2;i++){
+            for (int j=0;j<mRgba.width()/2;j++){
+            }
+        }
+        return mRgba;
         /*Core.transpose(mRgba, mRgbaT);
         Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
         Core.flip(mRgbaF, mRgba, 1 );*/
     }
 
-    private Mat overlap(Mat matBack, Mat matFore){
+    /*private Mat overlap(Mat matBack, Mat matFore){
 
         Mat mask2
                 = new Mat( new Size( matFore.cols(), matFore.rows() ),
@@ -132,18 +144,16 @@ public class CameraView extends AppCompatActivity implements CameraBridgeViewBas
         Size sizeMask = mask2.size();
         double[] data;
 
-        for (int i=0;i<sizeMask.height/2;i++ )  // making the upper left quarter
-            for (int j=0;j<sizeMask.width/2;j++ )  //of the whole mask image
-                mask2.put(i, j, 10);
 
-        /*for (int i=0;i<sizeMask.height;i++ )
-            for (int j=0;j<sizeMask.width;j++ ) {
+
+        for (int i=0;i<sizeMask.height/2;i++ )
+            for (int j=0;j<sizeMask.width/2;j++ ) {
                 data = matFore.get(i, j);
                 if (data[0] + data[1] + data[2] > 0)
                     mask2.put(i, j, 10);
-            }*/
+            }
         matFore.copyTo(matBack, mask2);
         return matBack;
 
-    }
+    }*/
 }

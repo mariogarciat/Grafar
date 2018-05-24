@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText inputLimSup;
     private EditText inputFunction;
     private String[] arrayInput;
+    ImageView imageView;
 
     private static String TAG = "MainActivity";
 
@@ -75,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
         inputFunction = findViewById(R.id.editFunction);
         inputLimInf = findViewById(R.id.editLimInf);
         inputLimSup = findViewById(R.id.editLimSup);
+        imageView = findViewById(R.id.imageFuncs);
+        Log.d("tagres",imageView.getId()+"");
+
 
         if(getIntent().getStringExtra("data") != null) {
             arrayInput = getIntent().getStringExtra("data").split(",");

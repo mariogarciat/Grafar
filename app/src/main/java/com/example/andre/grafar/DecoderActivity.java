@@ -62,7 +62,7 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
         setContentView(R.layout.activity_decoder);
 
         mainLayout = findViewById(R.id.main_layout);
-        resultFunc = findViewById(R.id.cameraView);
+
         initQRCodeReaderView();
 
 
@@ -73,6 +73,7 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
 
         qrCodeReaderView = content.findViewById(R.id.qrdecoderview);
         resultTextView = content.findViewById(R.id.result_text_view);
+
         flashlightCheckBox = content.findViewById(R.id.flashlight_checkbox);
         enableDecodingCheckBox = content.findViewById(R.id.enable_decoding_checkbox);
         pointsOverlayView = content.findViewById(R.id.points_overlay_view);
@@ -90,6 +91,7 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
                 qrCodeReaderView.setQRDecodingEnabled(isChecked);
             }
         });
+        resultFunc = content.findViewById(R.id.imageToCam);
         qrCodeReaderView.startCamera();
 
     }
@@ -148,15 +150,18 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
                         message = (String) json.get("message");
 
                         Log.d("tagm",message);
-                        byteImage = decodeBase64Image(message);
-                        //bitmap = decodeBase64Image(message);
-                        Log.d("tagbitmap",byteImage.toString());
-                        Intent intent = new Intent(getApplicationContext(),CameraView.class);
+                        //byteImage = decodeBase64Image(message);
+
+                        bitmap = decodeBase64Image(message);
+                        //Log.d("tagbitmap",byteImage.toString());
+
+
+                        /*Intent intent = new Intent(getApplicationContext(),CameraView.class);
                         intent.putExtra("byteArray",byteImage);
-                        startActivity(intent);
+                        startActivity(intent);*/
 
                         //resultFunc.setImageBitmap(bitmap);
-                        //Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -197,10 +202,10 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
         return Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
     }
 
-    private byte[] decodeBase64Image(String image){
+    private Bitmap decodeBase64Image(String image){
         byte[] decodeImage = Base64.decode(image, Base64.DEFAULT);
-        return decodeImage;
-        //return BitmapFactory.decodeByteArray(decodeImage, 0, decodeImage.length);
+        //return decodeImage;
+        return BitmapFactory.decodeByteArray(decodeImage, 0, decodeImage.length);
     }
 
 }
