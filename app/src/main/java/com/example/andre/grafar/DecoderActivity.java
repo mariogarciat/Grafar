@@ -101,9 +101,11 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
         resultTextView.setText(text);
 
         pointsOverlayView.setPoints(points);
-        qrCodeReaderView.setQRDecodingEnabled(false);
-        qrCodeReaderView.stopCamera();
+        Log.d("tag","qrReaded");
+        //qrCodeReaderView.setQRDecodingEnabled(false);
+        //qrCodeReaderView.stopCamera();
         sendRequest(text);
+        //qrCodeReaderView.startCamera();
         //Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         //intent.putExtra("data",text);
         //Intent camIntent = new Intent(getApplicationContext(),CameraView.class);
@@ -161,7 +163,7 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
                         startActivity(intent);*/
 
                         //resultFunc.setImageBitmap(bitmap);
-                        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
             @Override
