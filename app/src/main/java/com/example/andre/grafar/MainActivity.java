@@ -27,6 +27,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.gun0912.tedpermission.PermissionListener;
@@ -34,6 +35,7 @@ import com.gun0912.tedpermission.TedPermission;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.opencv.android.OpenCVLoader;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -52,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
     private EditText inputLimSup;
     private EditText inputFunction;
     private String[] arrayInput;
+
+    private static String TAG = "MainActivity";
+
+    static {
+        if(OpenCVLoader.initDebug()){
+            Log.i(TAG,"Opencv loaded succesfully");
+        }else{
+            Log.i(TAG,"Opencv not loaded");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onGraphBtn(View view) {
         StringRequest graphRequest = null;
+        ImageRequest imageRequest = null;
         try {
 
             JSONObject jsonBody = new JSONObject();
@@ -151,7 +164,10 @@ public class MainActivity extends AppCompatActivity {
             jsonBody.put("b",limSup);
             final String requestBody = jsonBody.toString();
             requestQueue = Volley.newRequestQueue(this);
-            graphRequest = new StringRequest(Request.Method.POST, urlPost,
+
+
+
+            /*graphRequest = new StringRequest(Request.Method.POST, urlPost,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -179,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                         return null;
                     }
                 }
-            };
+            };*/
         }catch (JSONException e){
             e.printStackTrace();
         }
