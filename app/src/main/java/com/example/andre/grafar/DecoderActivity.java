@@ -55,6 +55,7 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
     private Bitmap bitmap;
     private byte[] byteImage;
     private ImageView resultFunc;
+    private Boolean flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,15 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
         setContentView(R.layout.activity_decoder);
 
         mainLayout = findViewById(R.id.main_layout);
+        flag = false;
+        Bundle bundle = getIntent().getExtras();
+        if(bundle!=null){
+            byteImage = getIntent().getByteArrayExtra("byteImage");
+            Log.d("byteImage",byteImage.toString());
+            bitmap = BitmapFactory.decodeByteArray(byteImage,0,byteImage.length);
+            flag = true;
+        }
+
 
         initQRCodeReaderView();
 
@@ -92,6 +102,9 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
             }
         });
         resultFunc = content.findViewById(R.id.imageToCam);
+        if(flag){
+            resultFunc.setImageBitmap(bitmap);
+        }
         qrCodeReaderView.startCamera();
 
     }
@@ -101,12 +114,13 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
         resultTextView.setText(text);
 
         pointsOverlayView.setPoints(points);
+        pointsOverlayView.setVisibility(View.VISIBLE);
         Log.d("tag","qrReaded");
         qrCodeReaderView.setQRDecodingEnabled(false);
         enableDecodingCheckBox.setChecked(false);
         //qrCodeReaderView.stopCamera();
         sendRequest(text);
-        
+
         //qrCodeReaderView.startCamera();
         //Intent intent = new Intent(getApplicationContext(),MainActivity.class);
         //intent.putExtra("data",text);
@@ -165,7 +179,7 @@ public class DecoderActivity extends AppCompatActivity implements QRCodeReaderVi
                         startActivity(intent);*/
 
                         resultFunc.setImageBitmap(bitmap);
-                        //Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
+                        pointsOverlayView.setVisibility(View.INVISIBLE);
                     }
                 }, new Response.ErrorListener() {
             @Override

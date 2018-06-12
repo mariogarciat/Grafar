@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
@@ -36,6 +39,8 @@ import com.gun0912.tedpermission.TedPermission;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.opencv.android.OpenCVLoader;
 
 import java.io.UnsupportedEncodingException;
@@ -156,28 +161,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onGraphBtn(View view) {
+        final String function = inputFunction.getText().toString();
+        final String limInf = inputLimInf.getText().toString();
+        final String limSup = inputLimSup.getText().toString();
+        if(function.equals("") || limInf.equals("") || limSup.equals("")){
+            Toast.makeText(getApplicationContext(),"Ingrese todos los campos",Toast.LENGTH_SHORT).show();
+            return;
+        }
         StringRequest graphRequest = null;
-        ImageRequest imageRequest = null;
         try {
 
             JSONObject jsonBody = new JSONObject();
-            final String function = inputFunction.getText().toString();
-            final String limInf = inputLimInf.getText().toString();
-            final String limSup = inputLimSup.getText().toString();
+
             jsonBody.put("function",function);
-            jsonBody.put("a",limInf);
-            jsonBody.put("b",limSup);
+            jsonBody.put("a",Integer.parseInt(limInf));
+            jsonBody.put("b",Integer.parseInt(limSup));
             final String requestBody = jsonBody.toString();
             requestQueue = Volley.newRequestQueue(this);
 
-
-
-            /*graphRequest = new StringRequest(Request.Method.POST, urlPost,
+            graphRequest = new StringRequest(Request.Method.POST, urlPost,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             Log.d("res", response);
-                            Toast.makeText(getApplicationContext(),response,Toast.LENGTH_LONG).show();
+                            JSONParser parser = new JSONParser();
+                            org.json.simple.JSONObject json = null;
+                            String message = "";
+                            try {
+                                json = (org.json.simple.JSONObject) parser.parse(response);
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            message = (String) json.get("message");
+                            byte[] decodeImage = Base64.decode(message, Base64.DEFAULT);
+                            Intent intent = new Intent(getApplicationContext(),DecoderActivity.class);
+                            intent.putExtra("byteImage",decodeImage);
+                            Log.d("byteImage",decodeImage.toString());
+                            startActivity(intent);
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -200,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                         return null;
                     }
                 }
-            };*/
+            };
         }catch (JSONException e){
             e.printStackTrace();
         }
@@ -211,5 +231,11 @@ public class MainActivity extends AppCompatActivity {
     public void onQRDecode(View view) {
         Intent intent = new Intent(this,DecoderActivity.class);
         startActivity(intent);
+    }
+
+    private Bitmap decodeBase64Image(String image){
+        byte[] decodeImage = Base64.decode(image, Base64.DEFAULT);
+        //return decodeImage;
+        return BitmapFactory.decodeByteArray(decodeImage, 0, decodeImage.length);
     }
 }
